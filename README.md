@@ -2,11 +2,11 @@
 
 Written in C#
 
+Mono Game Engine
+
 This is a for the fun of it game in the making.
 
 Side scroller
-
-Problem solving (puzzle style)
 
 Point A to Point B style levels
 
