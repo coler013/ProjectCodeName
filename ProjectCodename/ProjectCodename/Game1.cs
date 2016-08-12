@@ -11,6 +11,7 @@ namespace ProjectCodename
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        MegaMan megaManSprite;
 
         public Game1()
         {
@@ -27,6 +28,7 @@ namespace ProjectCodename
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            megaManSprite = new MegaMan();            
 
             base.Initialize();
         }
@@ -41,7 +43,9 @@ namespace ProjectCodename
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            megaManSprite.LoadContent(Content);
         }
+       
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -63,6 +67,7 @@ namespace ProjectCodename
                 Exit();
 
             // TODO: Add your update logic here
+            megaManSprite.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -76,8 +81,14 @@ namespace ProjectCodename
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            megaManSprite.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
+      
+
+        
     }
 }

@@ -5,6 +5,15 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectCodename", "ProjectCodename\ProjectCodename.csproj", "{7BE19412-130E-49B4-975E-D3FD637C6473}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2FCFDE6C-F721-4C2C-B75E-F58E2EE8D044}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\..\Desktop\Mega Man\download.png = ..\..\..\..\Desktop\Mega Man\download.png
+		..\..\..\..\Desktop\Mega Man\Mega-Man-Sprite.jpg = ..\..\..\..\Desktop\Mega Man\Mega-Man-Sprite.jpg
+		..\..\..\..\Desktop\Mega Man\Megaman8bit.jpg = ..\..\..\..\Desktop\Mega Man\Megaman8bit.jpg
+		..\..\..\..\Desktop\Mega Man\Megaman_retro_3D_by_cezkid.jpeg = ..\..\..\..\Desktop\Mega Man\Megaman_retro_3D_by_cezkid.jpeg
+		..\..\..\..\Desktop\Mega Man\MegaManJumpSprite.jpg = ..\..\..\..\Desktop\Mega Man\MegaManJumpSprite.jpg
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
