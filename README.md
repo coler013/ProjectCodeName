@@ -27,3 +27,13 @@ Story and motivation are still up in the air.
 Need:
 Move player up down left right
 pick up objects
+__________________________________________________________________________
+Roles for the game development:
+~Menues/Hud
+~Gameplay
+~Enemies(AI Programming)
+~LevelDesign
+~Art
+~effects/camera
+~sound
+_____________________________________________________________________________
