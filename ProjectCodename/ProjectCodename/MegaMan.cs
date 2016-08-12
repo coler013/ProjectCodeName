@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Storage;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectCodename
 {
@@ -22,15 +15,15 @@ namespace ProjectCodename
         const int MOVE_LEFT = -1;
         const int MOVE_RIGHT = 1;
         
-
-
         enum State
         {
-            Walking
+            Walking,
+            Jumping
         }
         State currentState = State.Walking;
         Vector2 direction = Vector2.Zero;
         Vector2 speed = Vector2.Zero;
+        Vector2 startingPosition = Vector2.Zero;
 
         KeyboardState previousKeyboardState;
 
@@ -39,12 +32,15 @@ namespace ProjectCodename
             Position = new Vector2(START_POSITION_X, START_POSITION_Y);
             base.LoadContent(contentManager, MEGAMAN_ASSETNAME);
         }
+        
+        #region Updates
 
         public void Update(GameTime gameTime)
         {
             KeyboardState currentKeyboardState = Keyboard.GetState();
 
             UpdateMovement(currentKeyboardState);
+            UpdateJump(currentKeyboardState);
 
             previousKeyboardState = currentKeyboardState;
             base.Update(gameTime, speed, direction);
@@ -83,6 +79,46 @@ namespace ProjectCodename
 
         }
 
+        private void UpdateJump(KeyboardState aCurrentKeyboardState)
+        {
+            if (currentState == State.Walking)
+            {
+                if (aCurrentKeyboardState.IsKeyDown(Keys.Space) == true && previousKeyboardState.IsKeyDown(Keys.Space) == false)
+                {
+                    Jump();
+                }
+            }
 
+            if (currentState == State.Jumping)
+            {
+                if (startingPosition.Y - Position.Y > 150)
+                {
+                    direction.Y = MOVE_DOWN;
+                }
+
+                if (Position.Y > startingPosition.Y)
+                {
+                    Position.Y = startingPosition.Y;
+                    currentState = State.Walking;
+                    direction = Vector2.Zero;
+                }
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Megaman SOARS into the air in a giant leap and then moves the world to his feet
+        /// </summary>
+        private void Jump()
+        {
+            if (currentState != State.Jumping)
+            {
+                currentState = State.Jumping;
+                startingPosition = Position;
+                direction.Y = MOVE_UP;
+                speed = new Vector2(MEGAMAN_SPEED, MEGAMAN_SPEED);
+            }
+        }
     }
 }
