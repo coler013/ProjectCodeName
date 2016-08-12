@@ -10,6 +10,7 @@ namespace ProjectCodename
         const int START_POSITION_X = 125;
         const int START_POSITION_Y = 245;
         const int MEGAMAN_SPEED = 150;
+        const int MEGAMAN_JUMP_SPEED = 350;
         const int MOVE_UP = -1;
         const int MOVE_DOWN = 1;
         const int MOVE_LEFT = -1;
@@ -117,7 +118,7 @@ namespace ProjectCodename
                 currentState = State.Jumping;
                 startingPosition = Position;
                 direction.Y = MOVE_UP;
-                speed = new Vector2(MEGAMAN_SPEED, MEGAMAN_SPEED);
+                speed = new Vector2(MEGAMAN_JUMP_SPEED, MEGAMAN_JUMP_SPEED);
             }
         }
     }
