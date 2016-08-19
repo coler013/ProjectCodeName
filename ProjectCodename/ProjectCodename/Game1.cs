@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace ProjectCodename
+namespace ProjectCodename 
 {
     /// <summary>
     /// This is the main type for your game.
@@ -12,6 +12,20 @@ namespace ProjectCodename
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         MegaMan megaManSprite;
+
+        enum GameState
+        {
+            MainMenu,
+            Options,
+            Playing,
+        }
+
+        GameState CurrentGameState = GameState.MainMenu;
+
+        //Screen Adjust setting
+        int screenWidth = 800, screenHeight = 600;
+
+        cButton btnPlay;
 
         public Game1()
         {
@@ -44,6 +58,16 @@ namespace ProjectCodename
 
             // TODO: use this.Content to load your game content here
             megaManSprite.LoadContent(Content);
+
+            //Screen Setting Up
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = screenHeight;
+
+            graphics.ApplyChanges();
+            IsMouseVisible = true;
+
+            btnPlay = new cButton(Content.Load<Texture2D>("images/PlayBtn"), graphics.GraphicsDevice);
+            btnPlay.setPosition(new Vector2(350, 300));
         }
        
 
@@ -63,11 +87,20 @@ namespace ProjectCodename
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            MouseState mouse = Mouse.GetState();
 
             // TODO: Add your update logic here
             megaManSprite.Update(gameTime);
+
+            switch (CurrentGameState)
+            {
+                case GameState.MainMenu:
+                    if (btnPlay.isClicked == true) CurrentGameState = GameState.Playing;
+                    btnPlay.Update(mouse);
+                    break;
+                case GameState.Playing:
+                    break;
+            }
 
             base.Update(gameTime);
         }
@@ -83,9 +116,22 @@ namespace ProjectCodename
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             megaManSprite.Draw(spriteBatch);
+
+            switch (CurrentGameState)
+            {
+                case GameState.MainMenu:
+                    spriteBatch.Draw(Content.Load<Texture2D>("images/MainMenu"), new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
+                    btnPlay.Draw(spriteBatch);
+                    break;
+                case GameState.Playing:
+                    break;
+            }
+
             spriteBatch.End();
 
-            base.Draw(gameTime);
+            
+
+                    base.Draw(gameTime);
         }
       
 
