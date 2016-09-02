@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\..\..\..\Desktop\Mega Man\MegaManJumpSprite.jpg = ..\..\..\..\Desktop\Mega Man\MegaManJumpSprite.jpg
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileMapEditor", "TileMapEditor\TileMapEditor.csproj", "{6062A5FB-804B-47BE-8369-70292DE66184}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -24,6 +26,10 @@ Global
 		{7BE19412-130E-49B4-975E-D3FD637C6473}.Debug|x86.Build.0 = Debug|x86
 		{7BE19412-130E-49B4-975E-D3FD637C6473}.Release|x86.ActiveCfg = Release|x86
 		{7BE19412-130E-49B4-975E-D3FD637C6473}.Release|x86.Build.0 = Release|x86
+		{6062A5FB-804B-47BE-8369-70292DE66184}.Debug|x86.ActiveCfg = Debug|x86
+		{6062A5FB-804B-47BE-8369-70292DE66184}.Debug|x86.Build.0 = Debug|x86
+		{6062A5FB-804B-47BE-8369-70292DE66184}.Release|x86.ActiveCfg = Release|x86
+		{6062A5FB-804B-47BE-8369-70292DE66184}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
