@@ -30,9 +30,11 @@ namespace ProjectCodename
         public bool isClicked;
         public void Update(MouseState mouse)
         {
-            rectangle = new Rectangle((int)position.X, (int)position.Y, 1, 1);
+            rectangle = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
 
-            if(rectangle.Intersects(rectangle))
+            Rectangle mouseRectangle = new Rectangle(mouse.X, mouse.Y, 1, 1);
+
+            if (rectangle.Intersects(mouseRectangle))
             {
                 if (color.A == 255) down = false;
                 if (color.A == 0) down = true;

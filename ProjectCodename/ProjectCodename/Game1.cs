@@ -62,12 +62,14 @@ namespace ProjectCodename
             //Screen Setting Up
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;
+            //graphics.IsFullScreen = true;
 
             graphics.ApplyChanges();
             IsMouseVisible = true;
 
             btnPlay = new cButton(Content.Load<Texture2D>("images/PlayBtn"), graphics.GraphicsDevice);
             btnPlay.setPosition(new Vector2(350, 300));
+            
         }
        
 
