@@ -3,19 +3,18 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace TileMapEditor
+using TileEngine;
+
+namespace TileGame
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class Game1 : Game
     {
+        //Variables
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        List<Texture2D> tileTextures = new List<Texture2D>();
-
-        int[,] tileMap = new int[,]
+        Camera camera = new Camera();
+        TileLayer tileLayer = new TileLayer(new int[,]
         {
             { 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, },
             { 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, },
@@ -38,15 +37,7 @@ namespace TileMapEditor
             { 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, },
             { 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 0, 0, },
 
-        };
-
-        //Texture tile size
-        int tileWidth = 64;
-        int tileHeight = 64;
-
-        //Camera
-        Vector2 cameraPosition = Vector2.Zero;
-        float cameraSpeed = 5;
+        });
 
 
 
@@ -77,33 +68,17 @@ namespace TileMapEditor
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
-            Texture2D texture;
-
-            texture = Content.Load<Texture2D>("Tiles/se_free_dirt_texture");
-            tileTextures.Add(texture);
-
-            texture = Content.Load<Texture2D>("Tiles/se_free_grass_texture");
-            tileTextures.Add(texture);
-
-            texture = Content.Load<Texture2D>("Tiles/se_free_ground_texture");
-            tileTextures.Add(texture);
-
-            texture = Content.Load<Texture2D>("Tiles/se_free_mud_texture");
-            tileTextures.Add(texture);
-
-            texture = Content.Load<Texture2D>("Tiles/se_free_road_texture");
-            tileTextures.Add(texture);
-
-            texture = Content.Load<Texture2D>("Tiles/se_free_rock_texture");
-            tileTextures.Add(texture);
-
-            texture = Content.Load<Texture2D>("Tiles/se_free_wood_texture");
-            tileTextures.Add(texture);
-
-            texture = Content.Load<Texture2D>("Tiles/wood_axis_lightwood");
-            tileTextures.Add(texture);
-
+            tileLayer.LoadTileTextures(
+                Content,
+                "Tiles/se_free_dirt_texture",
+                "Tiles/se_free_grass_texture",
+                "Tiles/se_free_ground_texture",
+                "Tiles/se_free_mud_texture",
+                "Tiles/se_free_road_texture",
+                "Tiles/se_free_rock_texture",
+                "Tiles/se_free_wood_texture",
+                "Tiles/wood_axis_lightwood"
+                );
         }
 
 
@@ -117,53 +92,27 @@ namespace TileMapEditor
 
         protected override void Update(GameTime gameTime)
         {
+            //Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            //Variables
-            KeyboardState keyState = Keyboard.GetState();
-            //GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
-            Vector2 motion = Vector2.Zero;
-
-            //Maps and inverts joystick input
-            //motion = new Vector2(gamePadState.ThumbSticks.Left.X, -gamePadState.ThumbSticks.Left.Y);
-
-            //Maps keyboard movement
-            if (keyState.IsKeyDown(Keys.Up) || keyState.IsKeyDown(Keys.W))
-                motion.Y--;
-            if (keyState.IsKeyDown(Keys.Down) || keyState.IsKeyDown(Keys.S))
-                motion.Y++;
-            if (keyState.IsKeyDown(Keys.Left) || keyState.IsKeyDown(Keys.A))
-                motion.X--;
-            if (keyState.IsKeyDown(Keys.Right) || keyState.IsKeyDown(Keys.D))
-                motion.X++;
-
-            //Normalize and add speed
-            if (motion != Vector2.Zero)
-            {
-                motion.Normalize(); //Comment out if using gamepad for non-analog movement
-                cameraPosition += motion * cameraSpeed;
-            }
+            camera.Update();
 
             //Clamp camera on Top and Left of the window
-            if (cameraPosition.X < 0)
-                cameraPosition.X = 0;
-            if (cameraPosition.Y < 0)
-                cameraPosition.Y = 0;
+            if (camera.position.X < 0)
+                camera.position.X = 0;
+            if (camera.position.Y < 0)
+                camera.position.Y = 0;
 
             //Get window Width and Height
             int screenWidth = GraphicsDevice.Viewport.Width;
             int screenHeight = GraphicsDevice.Viewport.Height;
 
-            //Get tileMap Width and Height
-            int tileMapWidth = tileMap.GetLength(1) * tileWidth;
-            int tileMapHeight = tileMap.GetLength(0) * tileHeight;
-
             //Clamp camera on Bottom and Right of the window
-            if (cameraPosition.X > tileMapWidth - screenWidth)
-                cameraPosition.X = tileMapWidth - screenWidth;
-            if (cameraPosition.Y > tileMapHeight - screenHeight)
-                cameraPosition.Y = tileMapHeight - screenHeight;
+            if (camera.position.X > tileLayer.WidthInPixels - screenWidth)
+                camera.position.X = tileLayer.WidthInPixels - screenWidth;
+            if (camera.position.Y > tileLayer.HeightInPixels - screenHeight)
+                camera.position.Y = tileLayer.HeightInPixels - screenHeight;
 
             base.Update(gameTime);
         }
@@ -174,25 +123,7 @@ namespace TileMapEditor
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
-
-            //Gets tile map dimensions
-            int tileMapWidth = tileMap.GetLength(1);
-            int tileMapHeight = tileMap.GetLength(0);
-
-            //Draws tiles
-            for (int x = 0; x < tileMapWidth; x++)
-            {
-                for (int y = 0; y < tileMapHeight; y++)
-                {
-                    int textureIndex = tileMap[y, x];
-                    Texture2D texture = tileTextures[textureIndex];
-
-                    spriteBatch.Draw(texture, new Rectangle(x * tileWidth - (int)cameraPosition.X, y * tileHeight - (int)cameraPosition.Y, tileWidth, tileHeight), Color.White);
-                }
-            }
-
-            spriteBatch.End();
+            tileLayer.Draw(spriteBatch, camera);
 
             base.Draw(gameTime);
         }

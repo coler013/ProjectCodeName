@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace TileMapEditor
+namespace TileGame
 {
 #if WINDOWS || LINUX
     /// <summary>

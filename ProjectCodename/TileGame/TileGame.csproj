@@ -9,8 +9,8 @@
     <ProjectGuid>{6062A5FB-804B-47BE-8369-70292DE66184}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TileMapEditor</RootNamespace>
-    <AssemblyName>TileMapEditor</AssemblyName>
+    <RootNamespace>TileGame</RootNamespace>
+    <AssemblyName>TileGame</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -79,7 +79,12 @@
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\TileEngine\TileEngine.csproj">
+      <Project>{537f57b4-28c7-428f-972e-6be580c0fb57}</Project>
+      <Name>TileEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
