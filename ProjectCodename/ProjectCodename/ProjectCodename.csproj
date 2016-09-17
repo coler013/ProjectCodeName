@@ -39,6 +39,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="cButton.cs" />
+    <Compile Include="GameObject.cs" />
+    <Compile Include="ICollidable.cs" />
+    <Compile Include="Item\Item.cs" />
     <Compile Include="MegaMan.cs" />
     <Compile Include="Game1.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
