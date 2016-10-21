@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -37,6 +38,18 @@ namespace TileEngine
         List<Texture2D> tileTextures = new List<Texture2D>();
         int[,] map;
 
+        //Creates Alpha Channel
+        float alpha = 1f;
+
+        public float Alpha
+        {
+            get { return alpha; }
+
+            set
+            {
+                alpha = MathHelper.Clamp(value, 0f, 1f);
+            }
+        }
 
         //Gets the size of the map in pixels
         public int WidthInPixels
@@ -82,6 +95,181 @@ namespace TileEngine
         }
 
 
+        //
+        public static TileLayer FromFile(string filename, out string[] textureNameArray)
+        {
+            TileLayer tileLayer;
+            bool readingTextures = false;
+            bool readingLayout = false;
+            List<string> textureNames = new List<string>();
+            List<List<int>> tempLayout = new List<List<int>>();
+
+            using (StreamReader reader = new StreamReader(filename))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine().Trim();
+
+                    //Trims space and line breaks
+                    if (string.IsNullOrEmpty(line))
+                        continue;
+
+                    if (line.Contains("[Textures]"))
+                    {
+                        readingTextures = true;
+                        readingLayout = false;
+                    }
+                    else if (line.Contains("[Layout]"))
+                    {
+                        readingTextures = false;
+                        readingLayout = true;
+                    }
+                    else if (readingTextures)
+                    {
+                        textureNames.Add(line);
+                    }
+                    else if (readingLayout)
+                    {
+                        List<int> row = new List<int>();
+
+                        string[] cells = line.Split(' ');
+
+                        foreach (string c in cells)
+                        {
+                            if (!string.IsNullOrEmpty(c))
+                                row.Add(int.Parse(c));
+                        }
+
+                        tempLayout.Add(row);
+                    }
+                }
+            }
+
+            int width = tempLayout[0].Count;
+            int height = tempLayout.Count;
+
+            tileLayer = new TileLayer(width, height);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    tileLayer.SetCellIndex(x, y, tempLayout[y][x]);
+                }
+            }
+
+            textureNameArray = textureNames.ToArray();
+
+            return tileLayer;
+        }
+
+
+        //Checks to see if texture is in use
+        public int IsUsingTexture(Texture2D texture)
+        {
+            if (tileTextures.Contains(texture))
+                return tileTextures.IndexOf(texture);
+
+            return -1;
+        }
+
+
+        //Save Textures and Layouts to file
+        public void Save(string filename, string[] textureNames)
+        {
+            using (StreamWriter writer = new StreamWriter(filename))
+            {
+                writer.WriteLine("[Textures]");
+                foreach (string t in textureNames)
+                    writer.WriteLine(t);
+
+                writer.WriteLine();
+
+                writer.WriteLine("[Layout]");
+                for (int y = 0; y < Height; y++)
+                {
+                    string line = string.Empty;
+
+                    for (int x = 0; x < Width; x++)
+                    {
+                        line += map[y, x].ToString() + " ";
+                    }
+
+                    writer.WriteLine(line);
+                }
+            }
+        }
+
+
+        //Load Textures and Layers from file
+        public static TileLayer FromFile(ContentManager content, string filename)
+        {
+            TileLayer tileLayer;
+            bool readingTextures = false;
+            bool readingLayout = false;
+            List<string> textureNames = new List<string>();
+            List<List<int>> tempLayout = new List<List<int>>();
+
+            using (StreamReader reader = new StreamReader(filename))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine().Trim();
+
+                    //Trims space and line breaks
+                    if (string.IsNullOrEmpty(line))
+                        continue;
+
+                    if (line.Contains("[Textures]"))
+                    {
+                        readingTextures = true;
+                        readingLayout = false;
+                    }
+                    else if (line.Contains("[Layout]"))
+                    {
+                        readingTextures = false;
+                        readingLayout = true;
+                    }
+                    else if (readingTextures)
+                    {
+                        textureNames.Add(line);
+                    }
+                    else if (readingLayout)
+                    {
+                        List<int> row = new List<int>();
+
+                        string[] cells = line.Split(' ');
+
+                        foreach (string c in cells)
+                        {
+                            if (!string.IsNullOrEmpty(c))
+                                row.Add(int.Parse(c));
+                        }
+
+                        tempLayout.Add(row);
+                    }
+                }
+            }
+
+            int width = tempLayout[0].Count;
+            int height = tempLayout.Count;
+
+            tileLayer = new TileLayer(width, height);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    tileLayer.SetCellIndex(x, y, tempLayout[y][x]);
+                }
+            }
+
+            tileLayer.LoadTileTextures(content, textureNames.ToArray());
+
+            return tileLayer;
+        }
+
+
         //Loads each texture
         public void LoadTileTextures(ContentManager content, params string[] textureNames)
         {
@@ -104,10 +292,20 @@ namespace TileEngine
         }
 
 
+        public void SetCellIndex(int x, int y, int cellIndex)
+        {
+            map[y, x] = cellIndex;
+        }
+
+
+        public int GetCellIndex(int x, int y)
+        {
+            return map[y, x];
+        }
 
         public void Draw (SpriteBatch batch, Camera camera)
         {
-            batch.Begin();
+            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
             //Gets tile map dimensions
             int tileMapWidth = map.GetLength(1);
@@ -119,9 +317,13 @@ namespace TileEngine
                 for (int y = 0; y < tileMapHeight; y++)
                 {
                     int textureIndex = map[y, x];
+
+                    if (textureIndex == -1)
+                        continue;
+
                     Texture2D texture = tileTextures[textureIndex];
 
-                    batch.Draw(texture, new Rectangle(x * tileWidth - (int)camera.position.X, y * tileHeight - (int)camera.position.Y, tileWidth, tileHeight), Color.White);
+                    batch.Draw(texture, new Rectangle(x * tileWidth - (int)camera.position.X, y * tileHeight - (int)camera.position.Y, tileWidth, tileHeight), new Color(new Vector4(1f, 1f, 1f, Alpha)));
                 }
             }
 
