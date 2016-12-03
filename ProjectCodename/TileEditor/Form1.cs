@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.Xna.Framework;
@@ -35,6 +33,15 @@ namespace TileEditor
 
         int maxWidth = 0, maxHeight = 0;
 
+
+        //
+        public Vector2 GetMousePosition()
+        {
+            System.Drawing.Point point = this.PointToClient(Control.MousePosition);
+            return new Vector2(point.X, point.Y);
+        }
+
+
         //
         public GraphicsDevice GraphicsDevice
         {
@@ -57,7 +64,7 @@ namespace TileEditor
             openFileDialog1.Filter = "Layer File | *.layer";
             saveFileDialog1.Filter = "Layer File | *.layer";
 
-            //Mouse.WindowHandle = tileDisplay1.Handle;
+            Mouse.WindowHandle = tileDisplay1.Handle;
         }
 
 
@@ -86,8 +93,19 @@ namespace TileEditor
             camera.position.Y = vScrollBar1.Value * TileLayer.TileHeight;
 
             //Get mouse position
+            //MouseState ms = Mouse.GetState();
             int mx = Mouse.GetState().X;
             int my = Mouse.GetState().Y;
+            //int mx = (int)GetMousePosition().X;
+            //int my = (int)GetMousePosition().Y;
+            //int mx = Control.MousePosition.X; ;
+            //int my = Control.MousePosition.Y; ;
+
+            System.Diagnostics.Debug.WriteLine("msX " + ms.X);
+            System.Diagnostics.Debug.WriteLine("msY " + ms.Y);
+
+            int mx = ms.X;
+            int my = ms.Y;
 
             System.Diagnostics.Debug.WriteLine("mX " + mx);
             System.Diagnostics.Debug.WriteLine("mY " + my);
