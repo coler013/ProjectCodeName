@@ -101,11 +101,11 @@ namespace TileEditor
             //int mx = Control.MousePosition.X; ;
             //int my = Control.MousePosition.Y; ;
 
-            System.Diagnostics.Debug.WriteLine("msX " + ms.X);
-            System.Diagnostics.Debug.WriteLine("msY " + ms.Y);
+           // System.Diagnostics.Debug.WriteLine("msX " + ms.X);
+           // System.Diagnostics.Debug.WriteLine("msY " + ms.Y);
 
-            int mx = ms.X;
-            int my = ms.Y;
+           // int mx = ms.X;
+           // int my = ms.Y;
 
             System.Diagnostics.Debug.WriteLine("mX " + mx);
             System.Diagnostics.Debug.WriteLine("mY " + my);

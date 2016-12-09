@@ -64,6 +64,8 @@
     <Content Include="Content\images\Megaman8bit.jpg" />
     <Content Include="Content\images\MegaManJumpSprite.jpg" />
     <Content Include="Content\images\Megaman_retro_3D_by_cezkid.jpeg" />
+    <Content Include="Content\images\OptionsMenu.png" />
+    <Content Include="Content\images\ExitBtn.png" />
     <Content Include="Content\images\PlayBtn.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>

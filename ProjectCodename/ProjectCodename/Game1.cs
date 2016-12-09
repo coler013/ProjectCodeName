@@ -12,11 +12,13 @@ namespace ProjectCodename
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         MegaMan megaManSprite;
+        bool LastMenuMain = true;
 
         enum GameState
         {
             MainMenu,
             Options,
+            Paused,
             Playing,
         }
 
@@ -26,6 +28,7 @@ namespace ProjectCodename
         int screenWidth = 800, screenHeight = 600;
 
         cButton btnPlay;
+        cButton btnExit;
 
         public Game1()
         {
@@ -67,8 +70,16 @@ namespace ProjectCodename
             graphics.ApplyChanges();
             IsMouseVisible = true;
 
+            //Play Button
             btnPlay = new cButton(Content.Load<Texture2D>("images/PlayBtn"), graphics.GraphicsDevice);
             btnPlay.setPosition(new Vector2(350, 300));
+
+            //Options Button
+            btnExit = new cButton(Content.Load<Texture2D>("images/ExitBtn"), graphics.GraphicsDevice);
+            btnExit.setPosition(new Vector2(350, 350));
+            
+            
+
             
         }
        
@@ -90,9 +101,11 @@ namespace ProjectCodename
         protected override void Update(GameTime gameTime)
         {
             MouseState mouse = Mouse.GetState();
+            KeyboardState keyboard = Keyboard.GetState();
 
             // TODO: Add your update logic here
             megaManSprite.Update(gameTime);
+
 
             switch (CurrentGameState)
             {
@@ -101,6 +114,16 @@ namespace ProjectCodename
                     btnPlay.Update(mouse);
                     break;
                 case GameState.Playing:
+                    LastMenuMain = false;
+                    if (keyboard.IsKeyDown(Keys.Escape)) CurrentGameState = GameState.Options;
+                    break;
+                case GameState.Options:
+                    if (btnPlay.isClicked == true) CurrentGameState = GameState.Playing;
+                    btnPlay.Update(mouse);
+                    if (btnExit.isClicked == true) Exit();
+                    btnExit.Update(mouse);
+                    break;
+                case GameState.Paused:
                     break;
             }
 
@@ -126,6 +149,15 @@ namespace ProjectCodename
                     btnPlay.Draw(spriteBatch);
                     break;
                 case GameState.Playing:
+                    LastMenuMain = false;
+                    break;
+                case GameState.Options:
+                    spriteBatch.Draw(Content.Load<Texture2D>("images/OptionsMenu"), new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
+                    btnExit.Draw(spriteBatch);
+                    btnPlay.Draw(spriteBatch);
+                    LastMenuMain = false;
+                    break;
+                case GameState.Paused:
                     break;
             }
 
